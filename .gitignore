@@ -1,6 +1,6 @@
 # Dependency directories
 node_modules/
-
+model/
 # Environment variables file (if you use .env files)
 .env
 

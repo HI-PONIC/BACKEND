@@ -1,9 +1,9 @@
 
 const { BigQuery } = require("@google-cloud/bigquery");
 async function queryData() {
-  const datasetId = 'sensor_datastream';
-  const tableId = 'device_data';
-  const projectId = 'capstone-trial-424209';
+  const datasetId = process.env.DS_ID;
+  const tableId = process.env.TABLE_ID;
+  const projectId = process.env.GOOGLE_CLOUD_PROJECT;
   try{
     const bigquery = new BigQuery({
       projectId: process.env.GOOGLE_CLOUD_PROJECT
