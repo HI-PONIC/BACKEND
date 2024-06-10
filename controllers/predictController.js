@@ -11,7 +11,7 @@ exports.postPredictHandler = async (req, res) => {
         }
         res.status(200).json({
             status:"success",
-            predictResult: data
+            data: data
         });
     }catch(error){
         res.status(500).json({ message: error.message });
