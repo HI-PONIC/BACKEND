@@ -1,17 +1,5 @@
 const tf = require('@tensorflow/tfjs-node');
-const loadModel = require("../services/load_model")
-let model;
-
-// Load the model once when the server starts
-(async () => {
-    try {
-        model = await loadModel();
-        console.log('Model loaded successfully');
-    } catch (error) {
-        console.error('Failed to load model:', error);
-    }
-    
-})();
+let loadModel = require('./load_model');
 
 async function predictClassification(imageBuffer) {
     try {
@@ -20,6 +8,7 @@ async function predictClassification(imageBuffer) {
             .expandDims() // Add batch dimension
             .toFloat(); // Convert to float
 
+        let model = await loadModel();
         // Use the model's predict function
         const prediction = model.predict(tensor);
 
