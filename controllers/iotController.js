@@ -1,9 +1,11 @@
-const queryData = require('../services/load_bq');
+const {querySingleData, queryAverageData }= require('../services/load_bq');
 const send_alert = require('../services/send_alert')
 
+
 exports.getAllSensor = async (req, res) => {
+
   try{
-    const row = await queryData();
+    const row = await querySingleData();
     const sensorData = {
       ph:row.ph,
       humidity:row.humidity,
@@ -21,18 +23,19 @@ exports.getAllSensor = async (req, res) => {
     });
   }
 }
-exports.getPh = async (req,res) => {
-  
+
+exports.getAverage = async (req, res) => {
   try{
-    const row = await queryData();
-    const ph = row.ph;
-    const ph_status = row.ph_status;
-   /*  if(!ph_status){
-      await send_alert();
-    } */
+    const row = await queryAverageData();
+    const data = {
+      avg_ph:row.avg_ph,
+      avg_humidity:row.avg_humidity,
+      avg_temp: row.avg_temp,
+      avg_tds: row.avg_tds
+    };
     res.status(200).json({
       status: 'success',
-      ph: ph      
+      data: data 
     });
   }catch(error){
     res.status(500).json({
@@ -42,60 +45,3 @@ exports.getPh = async (req,res) => {
   }
 }
 
-exports.getHumidity = async (req,res) => {
-  try{
-    const row = await queryData();
-    const humidity = row.humidity;
-    const dht_status = row.dht_status;
-    /* if(!hd_status){
-      await send_alert();
-    } */
-    res.status(200).json({
-      status: 'success',
-      humidity: humidity     
-    });
-  }catch(error){
-    res.status(500).json({
-      status: 'error',
-      message:error.message
-    });
-  }
-}
-exports.getTemp = async (req,res) => {
-  try{
-    const row = await queryData();
-    const temp = row.temp;
-    const dht_status = row.dht_status;
-    /* if(!hd_status){
-      await send_alert();
-    } */
-    res.status(200).json({
-      status: 'success',
-      temp: temp     
-    });
-  }catch(error){
-    res.status(500).json({
-      status: 'error',
-      message:error.message
-    });
-  }
-}
-exports.getTDS = async (req,res) => {
-  try{
-    const row = await queryData();
-    const tds = row.tds;
-    const tds_status = row.tds_status;
-    /* if(!tds_status){
-      await send_alert();
-    } */
-    res.status(200).json({
-      status: 'success',
-      tds: tds     
-    });
-  }catch(error){
-    res.status(500).json({
-      status: 'error',
-      message:error.message
-    });
-  }
-}

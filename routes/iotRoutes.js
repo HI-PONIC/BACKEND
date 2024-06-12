@@ -4,9 +4,7 @@ const iotController = require('../controllers/iotController');
 
 const router = express.Router();
 
-router.get('/device/ph', iotController.getPh);
-router.get('/device/humidity', iotController.getHumidity);
-router.get('/device/tds', iotController.getTDS);
-router.get('/device/temp', iotController.getTemp);
+
 router.get('/device/allSensor', iotController.getAllSensor);
+router.get('/device/average', iotController.getAverage);
 module.exports = router;
