@@ -1,6 +1,8 @@
 # Dependency directories
 node_modules/
 model/
+mlModel/
+
 # Environment variables file (if you use .env files)
 .env
 
@@ -13,3 +15,8 @@ model/
 
 # User-specific files and directories
 .DS_Store
+
+#
+gcs-cred.json
+vbg_bangkit.jpg
+./services/load_model.js

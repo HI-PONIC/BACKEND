@@ -7,10 +7,14 @@ const authenticateToken = (req, res, next) => {
 
     if (!token) return res.status(401).json({ error: 'Access denied' });
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ error: 'Invalid token' });
-
-        req.user = user;
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            console.error('Error verifying token:', err);
+            return res.status(403).json({ error: true, message: 'Invalid token' });
+        }
+    
+        //console.log('Decoded Token:', decoded); // Log the decoded token
+        req.user = decoded;
         next();
     });
 };
