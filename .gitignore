@@ -18,5 +18,5 @@ mlModel/
 
 #
 gcs-cred.json
+bq-cred.json
 vbg_bangkit.jpg
-./services/load_model.js

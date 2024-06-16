@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
             return res.status(400).json({ error: true, message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.json({
             error: false,
             message: 'success',
@@ -83,7 +83,7 @@ exports.logout = async (req, res) => {
 
 exports.changeUsername = async (req, res) => {
     const { newUsername } = req.body;
-
+    
     try {
         // Get userId from the decoded token
         const userId = req.user.id;

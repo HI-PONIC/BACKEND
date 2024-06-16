@@ -1,5 +1,6 @@
 const { BigQuery } = require("@google-cloud/bigquery");
-
+const path = require('path')
+const serviceKey = path.join(__dirname, '../bq-cred.json');
 require('dotenv').config();
 
 async function querySingleData() {
@@ -10,6 +11,7 @@ async function querySingleData() {
 
   try{
     const bigquery = new BigQuery({
+      keyFilename: serviceKey,
       projectId: process.env.GOOGLE_CLOUD_PROJECT
     });
     
@@ -51,6 +53,7 @@ async function queryAverageData() {
     const tableId = process.env.TABLE_ID;
     const projectId = process.env.GOOGLE_CLOUD_PROJECT;
     const bigquery = new BigQuery({
+      keyFilename: serviceKey,
       projectId: process.env.GOOGLE_CLOUD_PROJECT
     });
 
@@ -86,5 +89,4 @@ async function queryAverageData() {
     throw new Error("Failed to query data");
   }
 }
-
 module.exports = {querySingleData, queryAverageData};

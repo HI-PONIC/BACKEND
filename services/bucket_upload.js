@@ -32,21 +32,23 @@ async function uploadImage(req_file){
           resumable: false,
         });
  
-        blobStream.on('error', (err) => {
-          console.error('Error uploading file:', err);
-          // Handle error, e.g., respond with an error status
-       });
-       blobStream.on('finish', () => {
-        console.log('File upload completed.');
-        const publicURL = format(
-          `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-        );
-  
-        // Perform any follow-up actions, such as making the file public
+        
+        return new Promise((resolve, reject) => {
+          blobStream.on('error', (err) => {
+              console.error('Error uploading file:', err);
+              reject(err);
+          });
+
+          blobStream.on('finish', () => {
+              const publicURL = format(
+                  `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+              );
+              resolve(publicURL);
+          });
+
+          blobStream.end(req_file.buffer);
       });
-      
-      blobStream.end(req_file.buffer);
-      return publicURL;
+
     }catch(error){
         console.log(error.message);
     }

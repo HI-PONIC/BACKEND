@@ -20,7 +20,8 @@ exports.addPlant = async (req, res) => {
         //const imageURL = uploadImage(req.file);
 
         // Create the plant
-        const plant = await Plant.create(name, date_added, imageURL, user_id);
+        //const plant = await Plant.create(name, date_added, imageURL, user_id);
+        const plant = await Plant.create(name, date_added, image, user_id);
 
         // Respond with the created plant
         res.status(201).json({
@@ -84,7 +85,7 @@ exports.deletePlant = async (req, res) => {
         const { id } = req.params;
 
         // Check if the plant belongs to the authenticated user
-        const plant = await Plant.findById(id);
+        const plant = await Plant.delete(id);
         if (!plant || plant.user_id !== req.user.id) {
             return res.status(403).json({
                 error: true,
