@@ -20,3 +20,6 @@ mlModel/
 gcs-cred.json
 bq-cred.json
 vbg_bangkit.jpg
+sql-cred.json
+
+cloud-sql-proxy

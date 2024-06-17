@@ -14,19 +14,6 @@ async function uploadImage(req_file){
         })
         console.log(process.env.GOOGLE_CLOUD_PROJECT);
         const bucket = storage.bucket(process.env.PLANT_IMG_BUCKET);
-        let imageURL;
-        // bucket.upload(`../vbg_bangkit.jpg`,
-        //     {
-        //       destination: `user-plant-image/coba.jpg`,
-        //     },
-        //     function (err, file) {
-        //       if (err) {
-        //         console.error(`Error uploading image image_to_upload.jpeg: ${err}`);
-        //       } else {
-        //         console.log(`Image image_to_upload.jpeg uploaded to ${process.env.PLANT_IMG_BUCKET}.`);
-        //         imageURL = `https://storage.googleapis.com/${bucket.name}/${destination}`
-        //       }
-        //     });
         const blob = bucket.file(req_file.originalname);
         const blobStream = blob.createWriteStream({
           resumable: false,
@@ -40,9 +27,8 @@ async function uploadImage(req_file){
           });
 
           blobStream.on('finish', () => {
-              const publicURL = format(
-                  `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-              );
+              const publicURL = `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+;
               resolve(publicURL);
           });
 

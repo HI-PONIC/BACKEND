@@ -17,11 +17,11 @@ exports.addPlant = async (req, res) => {
         }
 
         //upload image and get the url
-        //const imageURL = uploadImage(req.file);
-
+        const imageURL = await uploadImage(req.file);
+        //console.log(imageURL);
         // Create the plant
-        //const plant = await Plant.create(name, date_added, imageURL, user_id);
-        const plant = await Plant.create(name, date_added, image, user_id);
+        const plant = await Plant.create(name, date_added, imageURL, user_id);
+        //const plant = await Plant.create(name, date_added, image, user_id);
 
         // Respond with the created plant
         res.status(201).json({
@@ -122,7 +122,7 @@ exports.getPlantsByUser = async (req, res) => {
             ...plant,
             user_id: user_id
         }));
-        
+        console.log(plantsWithUserId);
         // Respond with the plants
         res.status(200).json({
             error: false,
