@@ -35,7 +35,7 @@ exports.getAverage = async (req, res) => {
     };
     res.status(200).json({
       status: 'success',
-      data: data 
+      averageData: data 
     });
   }catch(error){
     res.status(500).json({

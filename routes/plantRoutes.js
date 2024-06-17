@@ -10,6 +10,8 @@ const upload = multer({ storage });
 
 // Routes with authentication
 router.get('/', authenticateToken, plantController.getPlantsByUser);
+router.get('/monitoring/:id', authenticateToken, plantController.getPlantDataById);
+router.get('/average/:id', authenticateToken, plantController.getPlantAverageById);
 router.post('/', authenticateToken, upload.single('image'), plantController.addPlant);
 router.put('/:id', authenticateToken, upload.single('image'), plantController.updatePlant);
 router.delete('/:id', authenticateToken, plantController.deletePlant);

@@ -10,9 +10,9 @@ const pool = new Pool({
 });
 
 // Function to create a new plant
-exports.create = async (name, date_added, image, user_id) => {
-    const query = 'INSERT INTO plants (name, date_added, image, user_id) VALUES ($1, $2, $3, $4) RETURNING *';
-    const values = [name, date_added, image, user_id];
+exports.create = async (name, date_added, image, user_id, device_id) => {
+    const query = 'INSERT INTO plants (name, date_added, image, user_id, device_id) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+    const values = [name, date_added, image, user_id, device_id];
     const result = await pool.query(query, values);
     return result.rows[0];
 };
@@ -25,9 +25,9 @@ exports.findAll = async () => {
 };
 
 // Function to update a plant
-exports.update = async (id, name, date_added, image, user_id) => {
-    const query = 'UPDATE plants SET name = $1, date_added = $2, image = $3, user_id = $4 WHERE id = $5 RETURNING *';
-    const values = [name, date_added, image, user_id, id];
+exports.update = async (id, name, date_added, image, user_id, device_id) => {
+    const query = 'UPDATE plants SET name = $1, date_added = $2, image = $3, user_id = $4, device_id = $5 WHERE id = $6 RETURNING *';
+    const values = [name, date_added, image, user_id, device_id, id];
     const result = await pool.query(query, values);
     return result.rows[0];
 };
@@ -45,4 +45,9 @@ exports.findByUserId = async (user_id) => {
     const values = [user_id];
     const result = await pool.query(query, values);
     return result.rows;
+};
+
+exports.findById = async (id) => {
+    const result = await pool.query('SELECT device_id FROM plants WHERE id = $1', [id]);
+    return result.rows[0];
 };
