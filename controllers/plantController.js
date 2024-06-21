@@ -1,6 +1,7 @@
 const Plant = require('../models/plantModel');
 const uploadImage = require('../services/bucket_upload');
 const {querySingleData, queryAverageData} = require('../services/load_bq');
+const iotDevice =  require('../models/iotModel');
 exports.addPlant = async (req, res) => {
     try {
         const { name, date_added, device_id} = req.body;
@@ -8,16 +9,24 @@ exports.addPlant = async (req, res) => {
         const user_id = req.user.id; // Retrieve user ID from authenticated user
         console.log('User ID:', user_id);
 
-
+    
         // Check if required fields are provided
-        if (!name || !date_added ||!image) {
+        if (!name || !date_added ||!image ||!device_id) {
             return res.status(400).json({
                 error: true,
-                message: 'Name and date_added are required',
+                message: 'Name,date_added,image, and device id are required',
                 plant: null
             });
         }
-
+        const isExist = await iotDevice.findByDeviceId(device_id);
+        //check if device id exist
+        if(!isExist){
+            return res.status(400).json({
+                error: true,
+                message: 'device id are not exist',
+                plant: null
+            });
+        }
         //upload image and get the url
         const imageURL = await uploadImage(req.file);
         //console.log(imageURL);
@@ -120,10 +129,22 @@ exports.getPlantsByUser = async (req, res) => {
         // Fetch plants by user_id
         const plants = await Plant.findByUserId(user_id);
         
+       
         // Include user_id in the response
-        const plantsWithUserId = plants.map(plant => ({
-            ...plant,
-            user_id: user_id
+        const plantsWithUserId = await Promise.all(plants.map(async (plant) => {
+            console.log(plant.device_id);
+            const row = await querySingleData(plant.device_id); // Fetch the latest sensor data for each plant
+            const sensorData = {
+                ph:row.ph,
+                humidity:row.humidity,
+                temp: row.temp,
+                tds: row.tds
+              };
+            return {
+                ...plant,
+                user_id: user_id,
+                sensorData: sensorData,
+            };
         }));
         console.log(plantsWithUserId);
         // Respond with the plants

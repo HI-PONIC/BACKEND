@@ -20,7 +20,7 @@ exports.forgotPassword = async (req, res) => {
     try {
         const user = await User.findByEmail(email);
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: true, message: 'User not found' });
         }
 
         const code = crypto.randomBytes(3).toString('hex').toUpperCase(); // Generate a 6-character verification code
@@ -41,9 +41,9 @@ exports.forgotPassword = async (req, res) => {
 
         await transporter.sendMail(mailOptions);
 
-        res.status(200).json({ message: 'Verification code sent' });
+        res.status(200).json({ error: false, message: 'Verification code sent' });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: true, message: err.message });
     }
 };
 
@@ -53,15 +53,15 @@ exports.resetPassword = async (req, res) => {
     try {
         const resetRecord = await PasswordReset.findByCode(code);
         if (!resetRecord || resetRecord.expires < Date.now()) {
-            return res.status(400).json({ error: 'Verification code is invalid or has expired' });
+            return res.status(400).json({ error: true, message: 'Verification code is invalid or has expired' });
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         await User.updatePassword(resetRecord.user_id, hashedPassword);
         await PasswordReset.delete(resetRecord.id);
 
-        res.status(200).json({ message: 'Password has been reset' });
+        res.status(200).json({ error: false, message: 'Password has been reset' });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: true, message: err.message });
     }
 };
